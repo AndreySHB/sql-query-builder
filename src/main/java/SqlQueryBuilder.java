@@ -1,15 +1,12 @@
-package java.builder;
+package main.java;
 
 import java.util.*;
-
-import static java.builder.BuildUtil.*;
-import static java.builder.CommandType.*;
 
 public class SqlQueryBuilder {
     private final Map<CommandType, List<Command>> commands = new HashMap<>();
 
     {
-        Arrays.stream(values())
+        Arrays.stream(CommandType.values())
                 .forEach(commandType -> commands.put(commandType, new ArrayList<>()));
     }
 
@@ -19,40 +16,40 @@ public class SqlQueryBuilder {
     }
 
     private String buildQuery() {
-        if (commands.get(SELECT_FROM).isEmpty())
+        if (commands.get(CommandType.SELECT_FROM).isEmpty())
             throw new UnsupportedOperationException("No initial query");
 
         StringBuilder sb = new StringBuilder();
-        buildSelectFrom(commands.get(SELECT_FROM), sb);
-        buildSelectWhat(commands.get(SELECT_WHAT), sb);
-        buildInnerJoin(commands.get(INNER_JOIN), sb);
-        buildWhere(commands.get(WHERE_NOT_NULL), commands.get(WHERE_IN), sb);
-        buildOrderedBy(commands.get(ORDERED_BY), sb);
-        buildLimit(commands.get(LIMIT), sb);
+        BuildUtil.buildSelectFrom(commands.get(CommandType.SELECT_FROM), sb);
+        BuildUtil.buildSelectWhat(commands.get(CommandType.SELECT_WHAT), sb);
+        BuildUtil.buildInnerJoin(commands.get(CommandType.INNER_JOIN), sb);
+        BuildUtil.buildWhere(commands.get(CommandType.WHERE_NOT_NULL), commands.get(CommandType.WHERE_IN), sb);
+        BuildUtil.buildOrderedBy(commands.get(CommandType.ORDERED_BY), sb);
+        BuildUtil.buildLimit(commands.get(CommandType.LIMIT), sb);
         return sb.toString();
     }
 
     public SqlQueryBuilder query(String... args) {
-        commands.get(SELECT_FROM)
-                .add(new Command(SELECT_FROM, args));
+        commands.get(CommandType.SELECT_FROM)
+                .add(new Command(CommandType.SELECT_FROM, args));
         return this;
     }
 
     public SqlQueryBuilder select(String... args) {
-        commands.get(SELECT_WHAT)
-                .add(new Command(SELECT_WHAT, args));
+        commands.get(CommandType.SELECT_WHAT)
+                .add(new Command(CommandType.SELECT_WHAT, args));
         return this;
     }
 
     public SqlQueryBuilder orderedBy(String... args) {
-        commands.get(ORDERED_BY)
-                .add(new Command(ORDERED_BY, args));
+        commands.get(CommandType.ORDERED_BY)
+                .add(new Command(CommandType.ORDERED_BY, args));
         return this;
     }
 
     public SqlQueryBuilder whereNotNull(String... args) {
-        commands.get(WHERE_NOT_NULL)
-                .add(new Command(WHERE_NOT_NULL, args));
+        commands.get(CommandType.WHERE_NOT_NULL)
+                .add(new Command(CommandType.WHERE_NOT_NULL, args));
         return this;
     }
 
@@ -60,20 +57,20 @@ public class SqlQueryBuilder {
         String[] allArgs = new String[args.length + 1];
         allArgs[0] = arg1;
         System.arraycopy(args, 0, allArgs, 1, allArgs.length - 1);
-        commands.get(WHERE_IN)
-                .add(new Command(WHERE_IN, allArgs));
+        commands.get(CommandType.WHERE_IN)
+                .add(new Command(CommandType.WHERE_IN, allArgs));
         return this;
     }
 
     public SqlQueryBuilder innerJoin(String... args) {
-        commands.get(INNER_JOIN)
-                .add(new Command(INNER_JOIN, args));
+        commands.get(CommandType.INNER_JOIN)
+                .add(new Command(CommandType.INNER_JOIN, args));
         return this;
     }
 
     public SqlQueryBuilder limit(String... args) {
-        commands.get(LIMIT)
-                .add(new Command(LIMIT, args));
+        commands.get(CommandType.LIMIT)
+                .add(new Command(CommandType.LIMIT, args));
         return this;
     }
 

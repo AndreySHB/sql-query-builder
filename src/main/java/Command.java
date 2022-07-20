@@ -1,4 +1,4 @@
-package java.builder;
+package main.java;
 
 class Command {
     public Command(CommandType type, String[] args) {

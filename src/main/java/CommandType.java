@@ -1,4 +1,4 @@
-package java.builder;
+package main.java;
 
 public enum CommandType {
     SELECT_FROM,
@@ -7,5 +7,5 @@ public enum CommandType {
     WHERE_NOT_NULL,
     INNER_JOIN,
     LIMIT,
-    ORDERED_BY;
+    ORDERED_BY
 }
